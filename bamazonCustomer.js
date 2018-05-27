@@ -16,21 +16,9 @@ connection.connect(function (err) {
     print();
 });
 
+//make table prettier
 function print() {
     connection.query("SELECT * FROM products", function (err, res) {
-
-        //how to print without hard coding???
-        // console.table([
-        //     {
-        //       item: res[0].item,
-        //       department: res[0].department,
-        //       price: res[0].price,
-        //       stock: res[0].stock
-        //     }
-        //   ]);
-
-        //print as pretty table
-
         for (var i = 0; i < res.length; i++) {
             console.log("id: " + res[i].id + " item: " + res[i].item + " department: " + res[i].department + " price: " + res[i].price + " stock: " + res[i].stock);
         }
@@ -58,8 +46,7 @@ function start(res) {
                 "UPDATE products SET ? WHERE ?",
                 [
                     {
-                        stock: 
-                        // (res[answer.item_ID - 1].stock > parseInt(answer.amount))  
+                        stock:   
                         (res[answer.item_ID - 1].stock - parseInt(answer.amount))
                     },
                     {
