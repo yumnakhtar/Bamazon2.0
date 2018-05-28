@@ -16,7 +16,6 @@ connection.connect(function (err) {
     print();
 });
 
-//make table prettier
 function print() {
     connection.query("SELECT * FROM products", function (err, res) {
         //print as pretty table
@@ -34,47 +33,71 @@ function start(res) {
                 name: "item_ID",
                 type: "input",
                 message: "What is the item number of the product you'd like to buy? ",
-                validate: function(value) {
+                validate: function (value) {
                     if (isNaN(value) === false) {
-                      return true;
+                        return true;
                     }
                     console.log("\n Invalid input, please try again");
                     return false;
-                  }
+                }
             },
             {
                 name: "amount",
                 type: "input",
                 message: "How many would you like to buy? ",
-                //how to confirm only number is inputted??
-                validate: function(value) {
+                validate: function (value) {
                     if (isNaN(value) === false) {
-                      return true;
+                        return true;
                     }
                     console.log("\n Invalid input, please try again");
                     return false;
-                  }
+                }
             }
         ]).then(function (answer) {
-            connection.query(
-                "UPDATE products SET ? WHERE ?",
-                [
-                    {
-                        stock:   
-                        (res[answer.item_ID - 1].stock - parseInt(answer.amount))
-                    },
-                    {
-                        id: answer.item_ID
+            //why is this bugging out when i try to purchase a second thing in the same run?
+            if (answer.amount > res[answer.item_ID - 1].stock) {
+                console.log("Insufficient Quantity");
+                start();
+            }
+            else {
+                connection.query(
+                    "UPDATE products SET ? WHERE ?",
+                    [
+                        {
+                            stock:
+                                (res[answer.item_ID - 1].stock - parseInt(answer.amount))
+                        },
+                        {
+                            id: answer.item_ID
+                        }
+                    ],
+                    function (err) {
+                        if (err) throw err;
+                        else {
+                            console.log("Your purchase is confirmed");
+                            askRedo();
+                        }
                     }
-                ],
-                function (err) {
-                    if (err) throw err;
-                    else {
-                        console.log("your purchase is confirmed");
-                        print();
-                    }
-                }
 
-            )
+                )
+            }
         })
+}
+
+function askRedo() {
+    inquirer
+        .prompt([
+            {
+                name: "decision",
+                type: "list",
+                message: "Would you like to make any other purchases? ",
+                choices: ["Yes", "No"]
+            }
+        ]).then(function (answer) {
+            if (answer.decision === "Yes") {
+                start();
+            }
+            else console.log("Thank you for shopping at Bamazon!");
+            connection.end();
+        });
 }
