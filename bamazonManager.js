@@ -39,7 +39,6 @@ function start(result) {
                     // If a manager selects Add New Product, it should allow the manager to add a completely new product to the store.
                     console.log("you chose option 4");
                     addProduct();
-                    start();
                     break;
                 case "Exit":
                     connection.end();
@@ -62,7 +61,7 @@ function printAvailable() {
 function printLow() {
     connection.query("SELECT * FROM products", function (err, res) {
         for (var i = 0; i < res.length; i++) {
-            if (res[i].stock < 5) {
+            if (res[i].stock < 10) {
                 console.log("id: " + res[i].id + " item: " + res[i].item + " department: " + res[i].department + " price: " + res[i].price + " stock: " + res[i].stock);
             }
         }
@@ -120,6 +119,59 @@ function addInventory(res) {
         })
 }
 
-function addProduct() {
-
+function addProduct(res) {
+    inquirer
+    .prompt([
+      {
+        name: "item",
+        type: "input",
+        message: "What is the item you would like to add?"
+      },
+      {
+        name: "department",
+        type: "input",
+        message: "What department does this item fall into?"
+      },
+      {
+        name: "price",
+        type: "input",
+        message: "What is the price of this item?",
+        validate: function(value) {
+          if (isNaN(value) === false) {
+            return true;
+          }
+          return false;
+        }
+      },
+      {
+        name: "stock",
+        type: "input",
+        message: "How many of this item would you like to add to inventory",
+        validate: function(value) {
+          if (isNaN(value) === false) {
+            return true;
+          }
+          return false;
+        }
+      }
+    ])
+    .then(function(answer) {
+        if (result.item === answer.item){
+            console.log("This item is already in stock")
+        }
+      connection.query(
+        "INSERT INTO products SET ?",
+        {
+          item: answer.item.toUpperCase(),
+          department: answer.department.toUpperCase(),
+          price: answer.price,
+          stock: answer.stock
+        },
+        function(err) {
+          if (err) throw err;
+          console.log("New product has been added");
+          start();
+        }
+      );
+    });
 }
