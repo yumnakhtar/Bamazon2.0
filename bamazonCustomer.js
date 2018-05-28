@@ -19,6 +19,7 @@ connection.connect(function (err) {
 //make table prettier
 function print() {
     connection.query("SELECT * FROM products", function (err, res) {
+        //print as pretty table
         for (var i = 0; i < res.length; i++) {
             console.log("id: " + res[i].id + " item: " + res[i].item + " department: " + res[i].department + " price: " + res[i].price + " stock: " + res[i].stock);
         }
@@ -33,13 +34,26 @@ function start(res) {
                 name: "item_ID",
                 type: "input",
                 message: "What is the item number of the product you'd like to buy? ",
-                //how to confirm only number is inputted
+                validate: function(value) {
+                    if (isNaN(value) === false) {
+                      return true;
+                    }
+                    console.log("\n Invalid input, please try again");
+                    return false;
+                  }
             },
             {
                 name: "amount",
                 type: "input",
                 message: "How many would you like to buy? ",
                 //how to confirm only number is inputted??
+                validate: function(value) {
+                    if (isNaN(value) === false) {
+                      return true;
+                    }
+                    console.log("\n Invalid input, please try again");
+                    return false;
+                  }
             }
         ]).then(function (answer) {
             connection.query(
