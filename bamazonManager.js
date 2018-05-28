@@ -16,7 +16,7 @@ connection.connect(function (err) {
     start();
 });
 
-function start(result) {
+function start(res) {
     inquirer
         .prompt({
             name: "action",
@@ -33,12 +33,10 @@ function start(result) {
                     printLow();
                     break;
                 case "Add to Inventory":
-                    addInventory(result);
+                    addInventory(res);
                     break;
                 case "Add New Product":
-                    // If a manager selects Add New Product, it should allow the manager to add a completely new product to the store.
-                    console.log("you chose option 4");
-                    addProduct();
+                    addProduct(res);
                     break;
                 case "Exit":
                     connection.end();
@@ -156,14 +154,14 @@ function addProduct(res) {
       }
     ])
     .then(function(answer) {
-        if (result.item === answer.item){
-            console.log("This item is already in stock")
-        }
+        var itemCap = answer.item.toUpperCase();
+        var depCap = answer.department.toUpperCase();
+        //check to see if this item is already in stock
       connection.query(
         "INSERT INTO products SET ?",
         {
-          item: answer.item.toUpperCase(),
-          department: answer.department.toUpperCase(),
+          item: itemCap,
+          department: depCap,
           price: answer.price,
           stock: answer.stock
         },
