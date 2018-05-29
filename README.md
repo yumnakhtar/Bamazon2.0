@@ -34,3 +34,21 @@ In order to see the customer view you will need to call on bamazonCustomer.js. S
 For a Managerial view, you will call bamazonManager.js. Here you can see all sales, add to inventory, and even add cool new items to sell. Be creative!
 
 ![start](managerView.gif)
+
+## Built With
+
+* `JavaScript` - Programming Language
+* `Node.js` - JavaScript Runtime
+* `request` - Node package
+* `inquirer` - Node package
+* `as-table` - Node Package
+
+## Authors
+
+* **Yumna Akhtar** - [Initial Work](https://github.com/yumnakhtar)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+
