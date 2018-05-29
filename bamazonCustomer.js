@@ -16,6 +16,8 @@ connection.connect(function (err) {
     print();
 });
 
+var total = 0;
+
 function print() {
     connection.query("SELECT * FROM products", function (err, res) {
         //print as pretty table
@@ -83,6 +85,8 @@ function start(res) {
                     }
 
                 )
+                total += (res[answer.item_ID -1].price * answer.amount)
+                console.log("the total for this transaction: ", total);
             }
         })
 }
@@ -100,7 +104,9 @@ function askRedo() {
             if (answer.decision === "Yes") {
                 start();
             }
-            else console.log("Thank you for choosing Bamazon!");
+            else {
+                
+                console.log("Thank you for choosing Bamazon! Your total is: $", total);}
             connection.end();
         });
 }
