@@ -1,5 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+asTable = require ('as-table');
 //not installed yet. don't know how ot use yet
 // var cTable = require("console.table");
 

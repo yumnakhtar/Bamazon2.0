@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/yumnakhtar/Bamazon2.0#readme",
   "dependencies": {
+    "as-table": "^1.0.32",
     "inquirer": "^5.2.0",
     "mysql": "^2.15.0"
   }
