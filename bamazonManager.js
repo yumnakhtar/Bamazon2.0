@@ -47,11 +47,7 @@ function start(res) {
 
 function printAvailable() {
     connection.query("SELECT * FROM products", function (err, res) {
-        for (var i = 0; i < res.length; i++) {
-            if (res[i].stock > 0) {
-                console.log("id: " + res[i].id + " item: " + res[i].item + " department: " + res[i].department + " price: " + res[i].price + " stock: " + res[i].stock);
-            }
-        }
+        console.log(res);
         start(res);
     });
 }

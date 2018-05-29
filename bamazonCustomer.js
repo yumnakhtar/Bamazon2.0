@@ -19,6 +19,7 @@ connection.connect(function (err) {
 function print() {
     connection.query("SELECT * FROM products", function (err, res) {
         //print as pretty table
+        //alternative way to print this???
         for (var i = 0; i < res.length; i++) {
             console.log("id: " + res[i].id + " item: " + res[i].item + " department: " + res[i].department + " price: " + res[i].price + " stock: " + res[i].stock);
         }
@@ -65,7 +66,9 @@ function start(res) {
                     [
                         {
                             stock:
-                                (res[answer.item_ID - 1].stock - parseInt(answer.amount))
+                                (res[answer.item_ID - 1].stock - parseInt(answer.amount)),
+                            sales:
+                            res[answer.item_ID - 1].sales + parseInt(answer.amount)
                         },
                         {
                             id: answer.item_ID
@@ -97,7 +100,7 @@ function askRedo() {
             if (answer.decision === "Yes") {
                 start();
             }
-            else console.log("Thank you for shopping at Bamazon!");
+            else console.log("Thank you for choosing Bamazon!");
             connection.end();
         });
 }
