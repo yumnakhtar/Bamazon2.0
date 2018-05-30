@@ -1,8 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-asTable = require ('as-table');
-//not installed yet. don't know how ot use yet
-// var cTable = require("console.table");
+var Table = require("cli-table");
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -14,20 +12,34 @@ var connection = mysql.createConnection({
 
 connection.connect(function (err) {
     if (err) throw err;
-    print();
+    queryConnect();
 });
 
 var total = 0;
 
-function print() {
+function queryConnect() {
     connection.query("SELECT * FROM products", function (err, res) {
-        //print as pretty table
-        //alternative way to print this???
-        for (var i = 0; i < res.length; i++) {
-            console.log("id: " + res[i].id + " item: " + res[i].item + " department: " + res[i].department + " price: " + res[i].price + " stock: " + res[i].stock);
+        if (total === 0) {
+            print(res);
         }
-        start(res);
+        else {
+            start(res);
+        }
     });
+}
+
+function print(res) {
+    var table = new Table({
+        head: ['ID', 'ITEM', 'DEPARTMENT', 'PRICE', 'STOCK'],
+        colWidths: [5, 30, 15, 10, 10]
+    });
+    for (var i = 0; i < res.length; i++) {
+        table.push(
+            [res[i].id, res[i].item, res[i].department, res[i].price, res[i].stock]
+        );
+    }
+    console.log(table.toString());
+    start(res);
 }
 
 function start(res) {
@@ -38,7 +50,7 @@ function start(res) {
                 type: "input",
                 message: "What is the item number of the product you'd like to buy? ",
                 validate: function (value) {
-                    if (isNaN(value) === false) {
+                    if (isNaN(value) === false && value <= res.length && value > 0) {
                         return true;
                     }
                     console.log("\n Invalid input, please try again");
@@ -58,10 +70,9 @@ function start(res) {
                 }
             }
         ]).then(function (answer) {
-            //why is this bugging out when i try to purchase a second thing in the same run?
             if (answer.amount > res[answer.item_ID - 1].stock) {
                 console.log("Insufficient Quantity");
-                print();
+                askRedo();
             }
             else {
                 connection.query(
@@ -71,7 +82,7 @@ function start(res) {
                             stock:
                                 (res[answer.item_ID - 1].stock - parseInt(answer.amount)),
                             sales:
-                            res[answer.item_ID - 1].sales + parseInt(answer.amount)
+                                res[answer.item_ID - 1].sales + parseInt(answer.amount)
                         },
                         {
                             id: answer.item_ID
@@ -80,14 +91,13 @@ function start(res) {
                     function (err) {
                         if (err) throw err;
                         else {
-                            console.log("Your purchase is confirmed");
+                            console.log("Your selection has been added to your cart");
                             askRedo();
                         }
                     }
 
                 )
-                total += (res[answer.item_ID -1].price * answer.amount)
-                console.log("the total for this transaction: ", total);
+                total += (res[answer.item_ID - 1].price * answer.amount)
             }
         })
 }
@@ -103,12 +113,12 @@ function askRedo() {
             }
         ]).then(function (answer) {
             if (answer.decision === "Yes") {
-                print();
+                queryConnect();
             }
             else {
-                
+
                 console.log("Thank you for choosing Bamazon! Your total is: $", total);
-            connection.end();
-        }
+                connection.end();
+            }
         });
 }

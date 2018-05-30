@@ -1,7 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-//not installed yet. don't know how ot use yet
-// var cTable = require("console.table");
+var Table = require("cli-table");
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -15,6 +14,12 @@ connection.connect(function (err) {
     if (err) throw err;
     start();
 });
+
+function queryConnect() {
+    connection.query("SELECT * FROM products", function(err, res){
+
+    })
+}
 
 function start(res) {
     inquirer
@@ -47,18 +52,34 @@ function start(res) {
 
 function printAvailable() {
     connection.query("SELECT * FROM products", function (err, res) {
-        console.log(res);
+        var table = new Table({
+            head: ['ID', 'ITEM', 'SALES', 'DEPARTMENT', 'PRICE', 'STOCK'],
+            colWidths: [5, 30, 10, 15, 10, 10]
+        });
+        for (var i = 0; i <res.length; i++){
+            table.push(
+                [res[i].id, res[i].item, res[i].sales, res[i].department, res[i].price, res[i].stock]
+            )
+        }
+        console.log(table.toString());
         start(res);
     });
 }
 
 function printLow() {
     connection.query("SELECT * FROM products", function (err, res) {
+        var table = new Table({
+            head: ['ID', 'ITEM', 'SALES', 'DEPARTMENT', 'PRICE', 'STOCK'],
+            colWidths: [5, 30, 10, 15, 10, 10]
+        });
         for (var i = 0; i < res.length; i++) {
             if (res[i].stock < 10) {
-                console.log("id: " + res[i].id + " item: " + res[i].item + " department: " + res[i].department + " price: " + res[i].price + " stock: " + res[i].stock);
+                table.push(
+                    [res[i].id, res[i].item, res[i].sales, res[i].department, res[i].price, res[i].stock]
+                );
             }
         }
+        console.log(table.toString());
         start(res);
     });
 }
