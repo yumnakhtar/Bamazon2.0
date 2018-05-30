@@ -61,7 +61,7 @@ function start(res) {
             //why is this bugging out when i try to purchase a second thing in the same run?
             if (answer.amount > res[answer.item_ID - 1].stock) {
                 console.log("Insufficient Quantity");
-                start();
+                print();
             }
             else {
                 connection.query(
@@ -103,11 +103,12 @@ function askRedo() {
             }
         ]).then(function (answer) {
             if (answer.decision === "Yes") {
-                start();
+                print();
             }
             else {
                 
-                console.log("Thank you for choosing Bamazon! Your total is: $", total);}
+                console.log("Thank you for choosing Bamazon! Your total is: $", total);
             connection.end();
+        }
         });
 }
