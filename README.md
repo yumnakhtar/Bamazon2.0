@@ -1,6 +1,6 @@
 # Bamazon2.0
 
-In this application you can be a customer and buy some groceries, or become a manager and manage inventory. All of this is possible with the help of MySQL.
+In this application you can be a customer and buy some groceries, or become a manager and handle inventory. All of this is possible with the help of MySQL.
 
 ## Getting Started
 
@@ -16,7 +16,7 @@ You will need to install a few Node packages using Node Package Manager, or npm.
 
 ```
   "dependencies": {
-    "as-table": "^1.0.32",
+    "cli-table": "^0.3.1",
     "inquirer": "^5.2.0",
     "mysql": "^2.15.0"
   }
@@ -30,10 +30,12 @@ npm install
 ## Customer View
 In order to see the customer view you will need to call on bamazonCustomer.js. See what's in stock and shop till you drop!
 
+![customer](CustomerView.gif)
+
 ## Manager View
 For a Managerial view, you will call bamazonManager.js. Here you can see all sales, add to inventory, and even add cool new items to sell. Be creative!
 
-![start](managerView.gif)
+![manager](managerView.gif)
 
 ## Built With
 
@@ -41,7 +43,7 @@ For a Managerial view, you will call bamazonManager.js. Here you can see all sal
 * `Node.js` - JavaScript Runtime
 * `request` - Node package
 * `inquirer` - Node package
-* `as-table` - Node Package
+* `cli-table` - Node Package
 
 ## Authors
 
