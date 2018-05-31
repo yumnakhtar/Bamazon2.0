@@ -15,10 +15,22 @@ connection.connect(function (err) {
     start();
 });
 
-function queryConnect() {
+function queryConnect(action) {
     connection.query("SELECT * FROM products", function(err, res){
-
-    })
+        switch (action) {
+            case "printAll":
+            printAvailable(res);
+            break;
+            case "printFew":
+            printLow(res);
+            break;
+            case "addInventory":
+            addInventory(res);
+            break;
+            case "addProduct":
+            addProduct(res);
+        }
+    });
 }
 
 function start(res) {
@@ -32,16 +44,16 @@ function start(res) {
         .then(function (answer) {
             switch (answer.action) {
                 case "View Products for Sale":
-                    printAvailable();
+                    queryConnect("printAll");
                     break;
                 case "View Low Inventory":
-                    printLow();
+                    queryConnect("printFew");
                     break;
                 case "Add to Inventory":
-                    addInventory(res);
+                    queryConnect("addInventory");
                     break;
                 case "Add New Product":
-                    addProduct(res);
+                    queryConnect("addProduct");
                     break;
                 case "Exit":
                     connection.end();
@@ -50,8 +62,7 @@ function start(res) {
         });
 }
 
-function printAvailable() {
-    connection.query("SELECT * FROM products", function (err, res) {
+function printAvailable(res) {
         var table = new Table({
             head: ['ID', 'ITEM', 'SALES', 'DEPARTMENT', 'PRICE', 'STOCK'],
             colWidths: [5, 30, 10, 15, 10, 10]
@@ -63,11 +74,9 @@ function printAvailable() {
         }
         console.log(table.toString());
         start(res);
-    });
 }
 
-function printLow() {
-    connection.query("SELECT * FROM products", function (err, res) {
+function printLow(res) {
         var table = new Table({
             head: ['ID', 'ITEM', 'SALES', 'DEPARTMENT', 'PRICE', 'STOCK'],
             colWidths: [5, 30, 10, 15, 10, 10]
@@ -81,7 +90,6 @@ function printLow() {
         }
         console.log(table.toString());
         start(res);
-    });
 }
 
 function addInventory(res) {
